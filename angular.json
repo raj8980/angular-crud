@@ -13,6 +13,7 @@
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
+      
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -28,6 +29,7 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -91,6 +93,7 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -121,8 +124,13 @@
             }
           }
         }
+        
       }
     }
   },
-  "defaultProject": "demo-poc2"
+  "defaultProject": "demo-poc2",
+  "cli": {
+    "analytics": "05e7c1b9-eb09-43e0-ade4-62f9c95ad168",
+    "defaultCollection": "@ngrx/schematics"
+  }
 }
