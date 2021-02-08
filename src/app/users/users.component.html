@@ -1,0 +1,450 @@
+<div *ngIf="isRegisterError" class="alert-danger">
+    <span>Error while user creation.</span>
+    <a class="close" >&times;</a>
+</div>
+<div class="container">
+    <div> 
+        <h2 *ngIf="id"><b> Edit User</b></h2>
+        <h2 *ngIf="!id"><b> Create User</b></h2>
+    </div>
+    <div *ngIf="id"> <a mat-raised-button color="accent" [routerLink]="['/users/search-user']" >Go Back</a></div>
+    <div *ngIf="!id"> <a mat-raised-button color="accent" [routerLink]="['/users/search-user']" >Search Users</a></div>
+  </div>
+<mat-horizontal-stepper [linear]="isLinear" #stepper>
+    <mat-step [stepControl]="profileForm">
+        <mat-card>
+            
+            <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+                <ng-template matStepLabel>Fill out Bidder Information</ng-template>
+                <mat-grid-list cols="2" rowHeight="60px">
+                    <mat-grid-tile class="example-full-width">
+                        <div>
+                            <mat-label>User Type : </mat-label>
+                         <mat-radio-group formControlName="usertype">
+                            <span *ngFor="let userTypeDtl of userTypes; let i=index">
+                                <mat-radio-button [value]="userTypeDtl.userTypeId">{{userTypeDtl.userType}}</mat-radio-button>
+                            </span>
+                          </mat-radio-group> 
+                       </div>
+                        <!-- <mat-form-field class="example-full-width">
+                            <mat-select formControlName="usertype">
+                                <mat-option>-- None --</mat-option>
+                                <div *ngFor="let userTypeDtl of userTypes; let i=index">
+                                    <mat-option [value]="userTypeDtl.userTypeId">{{userTypeDtl.userType}}</mat-option>
+                                </div>
+                            </mat-select>
+                            <mat-label>
+                                Select User Type
+                            </mat-label>
+                            <mat-error>
+                                <span
+                                    *ngIf="!profileFormControl.usertype.valid && profileFormControl.usertype.errors && profileFormControl.usertype.touched"
+                                    class="invalid-feedback">
+                                    <span *ngIf="profileFormControl.usertype.errors.required">User Type is
+                                        required</span>
+                                </span>
+                            </mat-error>
+                        </mat-form-field> -->
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field class="example-full-width">
+                            <input type="email" formControlName="emailid" matInput placeholder="Enter Email Id" (change)="duplicateCheckEmail()"  matTooltip="Email ID will be your login ID" >
+                            <mat-error>
+                                <span
+                                    *ngIf="!profileFormControl.emailid.valid && profileFormControl.emailid.errors && profileFormControl.emailid.touched"
+                                    class="invalid-feedback">
+                                    <span *ngIf="profileFormControl.emailid.errors.required">Email is required.</span>
+                                    <span *ngIf="profileFormControl.emailid.errors.email">Enter valid email id.</span>
+                                    <span *ngIf="profileFormControl.emailid.errors.emailAlreadyExist">Duplicate email id found.</span>
+                                </span>
+                            </mat-error>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Enter your password</mat-label>
+                            <input matInput formControlName="password" [type]="hide ? 'password' : 'text'">
+                            <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                                [attr.aria-pressed]="hide">
+                                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                            <mat-error>
+                                <div *ngIf="!profileFormControl.password.valid && profileFormControl.password.errors && profileFormControl.password.touched"
+                                    class="invalid-feedback">
+                                    <div *ngIf="profileFormControl.password.errors.required">Password is required.</div>
+                                    <div *ngIf="profileFormControl.password.errors.minlength">Password must be at least
+                                        6
+                                        characters.
+                                    </div>
+                                </div>
+                            </mat-error>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Enter your confirm password</mat-label>
+                            <input matInput formControlName="confirmpassword" [type]="cphide ? 'password' : 'text'">
+                            <button type="button" mat-icon-button matSuffix (click)="cphide = !cphide"
+                                [attr.aria-label]="'Hide password'" [attr.aria-pressed]="cphide">
+                                <mat-icon>{{cphide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                            <mat-error>
+                                <div *ngIf="!profileFormControl.confirmpassword.valid && profileFormControl.confirmpassword.errors && profileFormControl.confirmpassword.touched"
+                                    class="invalid-feedback">
+                                    <div *ngIf="profileFormControl.confirmpassword.errors.required">Confirm password is
+                                        required.
+                                    </div>
+                                    <div *ngIf="profileFormControl.confirmpassword.errors.minlength">Confirm Password
+                                        must be at
+                                        least 6
+                                        characters</div>
+                                    <div *ngIf="profileFormControl.confirmpassword.errors.mustMatch">Password must match
+                                    </div>
+                                </div>
+                            </mat-error>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Select your Company Type</mat-label>
+                            <mat-select formControlName="companytype">
+                                <mat-option>-- None --</mat-option>
+                                <div *ngFor="let companyTypeDtl of companyTypes; let i=index">
+                                    <mat-option [value]="companyTypeDtl.companyTypeID">{{companyTypeDtl.companyType}}
+                                    </mat-option>
+                                </div>
+                            </mat-select>
+                            <mat-error>
+                                <div *ngIf="!profileFormControl.companytype.valid && profileFormControl.companytype.errors && profileFormControl.companytype.touched"
+                                    class="invalid-feedback">
+                                    <div *ngIf="profileFormControl.companytype.errors.required">Company Type is
+                                        required.</div>
+                                </div>
+                            </mat-error>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Enter your Company Name</mat-label>
+                            <input matInput formControlName="companyname" />
+                            <mat-error>
+                                <div *ngIf="!profileFormControl.companyname.valid && profileFormControl.companyname.errors && profileFormControl.companyname.touched"
+                                    class="invalid-feedback">
+                                    <div *ngIf="profileFormControl.companyname.errors.required">Company Name is
+                                        required.</div>
+                                    <div *ngIf="profileFormControl.companyname.errors.minlength">Company Name must be at
+                                        least 5
+                                        characters.
+                                    </div>
+                                    <div *ngIf="profileFormControl.companyname.errors.maxlength">Company Name at least
+                                        100
+                                        characters
+                                        long.
+                                    </div>
+                                </div>
+                            </mat-error>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <!-- <mat-grid-tile>
+                          <mat-form-field class="example-full-width">
+                            <mat-label>Enter your Address</mat-label>
+                            <textarea matInput formControlName="address"></textarea>
+                            <mat-error>
+                                <div *ngIf="!profileFormControl.address.valid && profileFormControl.address.errors && profileFormControl.address.touched"
+                                    class="invalid-feedback">
+                                    <div *ngIf="profileFormControl.address.errors.required">Address is required.</div>
+                                    <div *ngIf="profileFormControl.address.errors.minlength">Address must be at least 5
+                                        characters.
+                                    </div>
+                                    <div *ngIf="profileFormControl.address.errors.maxlength">Address at least 100
+                                        characters long.
+                                    </div>
+                                </div>
+                            </mat-error>
+                        </mat-form-field> 
+                    </mat-grid-tile> -->
+                    <mat-grid-tile>
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Select your country</mat-label>
+                            <mat-select formControlName="country" (selectionChange)="loadState($event)">
+                                <mat-option>None</mat-option>
+                                <div *ngFor="let countryDtl of countries; let i=index">
+                                    <mat-option [value]="countryDtl.countryId">{{countryDtl.countryName}}</mat-option>
+                                </div>
+                            </mat-select>
+                            <mat-error>
+                                <div *ngIf="!profileFormControl.country.valid && profileFormControl.country.errors && profileFormControl.country.touched"
+                                    class="invalid-feedback">
+                                    <div *ngIf="profileFormControl.country.errors.required">Country is required.</div>
+                                </div>
+                            </mat-error>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Select your state</mat-label>
+                            <mat-select formControlName="state">
+                                <mat-option>None</mat-option>
+                                <div *ngFor="let state of states; let i=index">
+                                    <mat-option [value]="state.stateId">{{state.stateName}}</mat-option>
+                                </div>
+                            </mat-select>
+                            <mat-error>
+                                <div *ngIf="!profileFormControl.state.valid && profileFormControl.state.errors && profileFormControl.state.touched"
+                                    class="invalid-feedback">
+                                    <div *ngIf="profileFormControl.state.errors.required">State is required.</div>
+                                </div>
+                            </mat-error>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Telephone</mat-label>
+                            <span matPrefix>+91 &nbsp;</span>
+                            <input type="tel" formControlName="mobileno" matInput placeholder="555-555-1234">
+                            <mat-icon matSuffix>mode_edit</mat-icon>
+                            <mat-error>
+                                <div *ngIf="!profileFormControl.mobileno.valid && profileFormControl.mobileno.errors && profileFormControl.mobileno.touched"
+                                    class="invalid-feedback">
+                                    <div *ngIf="profileFormControl.mobileno.errors.required">Mobile Number is required.
+                                    </div>
+                                </div>
+                            </mat-error>
+                        </mat-form-field>
+                    </mat-grid-tile>
+                </mat-grid-list>
+                <mat-grid-list cols="1" rowHeight="200px">
+                    <mat-grid-tile>
+                        
+                            
+                            <ckeditor  [editor]="editor"formControlName="address"></ckeditor>
+                            <mat-error>
+                                <div *ngIf="!profileFormControl.address.valid && profileFormControl.address.errors && profileFormControl.address.touched"
+                                    class="invalid-feedback">
+                                    <div *ngIf="profileFormControl.address.errors.required">Address is required.</div>
+                                    <div *ngIf="profileFormControl.address.errors.minlength">Address must be at least 5
+                                        characters.
+                                    </div>
+                                    <div *ngIf="profileFormControl.address.errors.maxlength">Address at least 100
+                                        characters long.
+                                    </div>
+                                </div>
+                            </mat-error>
+                        
+                        
+                    </mat-grid-tile>
+                </mat-grid-list>
+                <mat-card>
+                    <div formArrayName="pastExp">
+                        <h3>Past Experience</h3> <button type="button" mat-raised-button color="primary"
+                            (click)="addPastExp()"> Add
+                            Experience</button>
+                        <mat-grid-list cols="6" rowHeight="100px">
+                            <div *ngFor="let exp of pastExp.controls;let i=index" [formGroupName]="i">
+                                <mat-grid-tile>
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Enter your Client Name</mat-label>
+                                        <input matInput formControlName="clientName" />
+                                        <mat-error>
+                                            <span
+                                                *ngIf="!getPastExpFormGroup(i).controls['clientName'].valid && getPastExpFormGroup(i).controls['clientName'].errors && getPastExpFormGroup(i).controls['clientName'].touched"
+                                                class="invalid-feedback">
+                                                <span
+                                                    *ngIf="getPastExpFormGroup(i).controls['clientName'].hasError('required')">Client
+                                                    Name is
+                                                    required.</span>
+                                                <span
+                                                    *ngIf="getPastExpFormGroup(i).controls['clientName'].hasError('minlength')">Client
+                                                    Name
+                                                    Minimum Legth required 6.</span>
+                                                <span
+                                                    *ngIf="getPastExpFormGroup(i).controls['clientName'].hasError('maxlength')">Client
+                                                    Name
+                                                    max lenth is 100.</span>
+                                            </span>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                                <mat-grid-tile>
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Enter your Project Name</mat-label>
+                                        <input matInput formControlName="projectName" />
+                                        <mat-error>
+                                            <span
+                                                *ngIf="!getPastExpFormGroup(i).controls['projectName'].valid && getPastExpFormGroup(i).controls['projectName'].errors && getPastExpFormGroup(i).controls['projectName'].touched"
+                                                class="invalid-feedback">
+                                                <span
+                                                    *ngIf="getPastExpFormGroup(i).controls['projectName'].hasError('required')">project
+                                                    Name
+                                                    is required.</span>
+                                                <span
+                                                    *ngIf="getPastExpFormGroup(i).controls['projectName'].hasError('minlength')">project
+                                                    Name
+                                                    Minimum Legth required 5.</span>
+                                                <span
+                                                    *ngIf="getPastExpFormGroup(i).controls['projectName'].hasError('maxlength')">project
+                                                    Name
+                                                    max lenth is 20.</span>
+                                            </span>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                                <mat-grid-tile>
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Enter your Project Value</mat-label>
+                                        <input matInput formControlName="projectValue" />
+                                        <mat-error>
+                                            <span
+                                                *ngIf="!getPastExpFormGroup(i).controls['projectValue'].valid && getPastExpFormGroup(i).controls['projectValue'].errors && getPastExpFormGroup(i).controls['projectValue'].touched"
+                                                class="invalid-feedback">
+                                                <span
+                                                    *ngIf="getPastExpFormGroup(i).controls['projectValue'].hasError('required')">Project
+                                                    Value
+                                                    is required.</span>
+                
+                                                    <span
+                                                    *ngIf="getPastExpFormGroup(i).controls['projectValue'].hasError('decimalFormat')">Project
+                                                    Value Required 12 digits with 2 decimals numbers.</span>
+                                            </span>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                                <mat-grid-tile>
+                                    <mat-form-field apperance="fill" class="example-full-width">
+                                        <input matInput [ngxMatDatetimePicker]="picker2" [max]="today"
+                                            placeholder="Choose a date & time" formControlName="projectStartDate">
+
+                                        <mat-datepicker-toggle matSuffix [for]="$any(picker2)"></mat-datepicker-toggle>
+
+                                        <ngx-mat-datetime-picker #picker2></ngx-mat-datetime-picker>
+                                        <mat-error>
+                                            <span
+                                                *ngIf="!getPastExpFormGroup(i).controls['projectStartDate'].valid && getPastExpFormGroup(i).controls['projectStartDate'].errors && getPastExpFormGroup(i).controls['projectStartDate'].touched"
+                                                class="invalid-feedback">
+                                                <span
+                                                    *ngIf="getPastExpFormGroup(i).controls['projectStartDate'].hasError('required')">Project
+                                                    Start Date is required.</span>
+                                            </span>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                                <!-- <mat-form-field appearance="fill">
+                <mat-label>Choose a Project Start date</mat-label>
+                <input matInput [matDatepicker]="picker2" [max]="today" formControlName="projectStartDate">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2 touchUi color="primary"></mat-datepicker>
+                <mat-error>
+                    <span
+                        *ngIf="!getPastExpFormGroup(i).controls['projectStartDate'].valid && getPastExpFormGroup(i).controls['projectStartDate'].errors && getPastExpFormGroup(i).controls['projectStartDate'].touched"
+                        class="invalid-feedback">
+                        <span *ngIf="getPastExpFormGroup(i).controls['projectStartDate'].hasError('required')">Project
+                            Start Date is required.</span>
+                    </span>
+                </mat-error>
+            </mat-form-field> -->
+
+
+                                <!-- <mat-form-field appearance="fill">
+                <mat-label>Choose a Project Start date</mat-label>
+                <input matInput [matDatepicker]="picker2" [max]="today" formControlName="projectEndDate">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2 touchUi color="primary"></mat-datepicker>
+                <mat-error>
+                    <span
+                        *ngIf="!getPastExpFormGroup(i).controls['projectEndDate'].valid && getPastExpFormGroup(i).controls['projectEndDate'].errors && getPastExpFormGroup(i).controls['projectEndDate'].touched"
+                        class="invalid-feedback">
+                        <span *ngIf="getPastExpFormGroup(i).controls['projectEndDate'].hasError('required')">Project End
+                            Date is required.</span>
+                            <span *ngIf="getPastExpFormGroup(i).controls['projectEndDate'].hasError('maxDate')">Project End
+                                Date must be greater than project start date.</span>
+                    </span>
+                </mat-error>
+            </mat-form-field> -->
+                                <mat-grid-tile>
+                                    <mat-form-field apperance="fill" class="example-full-width">
+                                        <input matInput [ngxMatDatetimePicker]="picker" [max]="today"
+                                            placeholder="Choose a date & time" formControlName="projectEndDate">
+
+                                        <mat-datepicker-toggle matSuffix [for]="$any(picker)"></mat-datepicker-toggle>
+
+                                        <ngx-mat-datetime-picker #picker></ngx-mat-datetime-picker>
+                                        <mat-error>
+                                            <span
+                                                *ngIf="!getPastExpFormGroup(i).controls['projectEndDate'].valid && getPastExpFormGroup(i).controls['projectEndDate'].errors && getPastExpFormGroup(i).controls['projectEndDate'].touched"
+                                                class="invalid-feedback">
+                                                <span
+                                                    *ngIf="getPastExpFormGroup(i).controls['projectEndDate'].hasError('required')">Project
+                                                    End
+                                                    Date is required.</span>
+                                                <span
+                                                    *ngIf="getPastExpFormGroup(i).controls['projectEndDate'].hasError('maxDate')">Project
+                                                    End
+                                                    Date must be greater than project start date.</span>
+                                            </span>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </mat-grid-tile>
+                                <mat-grid-tile>
+                                    <button type="button" mat-raised-button color="warn"
+                                        (click)="deleteExp(i)">Delete</button>
+                                </mat-grid-tile>
+                            </div>
+                        </mat-grid-list>
+                    </div>
+                </mat-card>
+                <br />
+                <!-- <button mat-raised-button color="primary" [disabled]="!profileForm.valid">Submit</button> <button
+                    type="button" mat-raised-button color="primary" [routerLink]="'/users/search-user'">Search
+                    Users</button> -->
+            </form>
+        </mat-card>
+        <div>
+            <button type="button" mat-button matStepperPrevious>Back</button>
+            <button type="button" mat-button matStepperNext>Next</button>
+        </div>
+    </mat-step>
+    <mat-step [stepControl]="fileUploadForm">
+        <mat-grid-list cols="2" rowHeight="100px">
+            <mat-grid-tile>
+                <input type="file" #uploadPanCard id="uploadPanCard" name="uploadPanCard" accept="image/*" style="display:none;" />
+                <span>{{panCardFileName}}</span>
+                <button type="button" mat-button color="warn" (click)="onUploadDPanClick()">
+                    <mat-icon>file_upload</mat-icon>
+                    Upload Pan Card
+                </button>
+        </mat-grid-tile>
+            <mat-grid-tile>
+                <input type="file" #uploadAadharCard id="uploadAadharCard" name="uploadAadharCard" accept="image/*" style="display:none;" />
+                <span>{{aadharCardFileName}}</span>
+                <button type="button" mat-button color="warn" (click)="onUploadAadharClick()">
+                    <mat-icon>file_upload</mat-icon>
+                    Upload Aadhar Card
+                </button>
+
+            </mat-grid-tile>
+            <mat-grid-tile>
+
+                <input type="file" #uploadCertificate id="uploadCertificate" name="uploadCertificate" accept="image/*" style="display:none;" />
+                <span>{{certificateFileName}}</span>
+                <button type="button" mat-button color="warn" (click)="onUploadCertClick()">
+                    <mat-icon>file_upload</mat-icon>
+                    Upload Certificates
+                </button>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <input type="file" #uploadDocument id="uploadDocument" name="uploadDocument" accept="image/*" style="display:none;" />
+                <span>{{documentFileName}}</span>
+                <button type="button" mat-button color="warn" (click)="onUploadDocClick()">
+                    <mat-icon>file_upload</mat-icon>
+                    Upload Document
+                </button>
+            </mat-grid-tile>
+        </mat-grid-list>
+        <div>
+            <button type="button" mat-button matStepperPrevious>Back</button>
+            <!-- <button mat-button matStepperNext>Next</button> -->
+            <button mat-raised-button color="primary" [disabled]="isdisabled" (click)="openDialog()">Submit</button>
+        </div>
+    </mat-step>
+
+</mat-horizontal-stepper>

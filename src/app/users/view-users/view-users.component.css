@@ -1,0 +1,27 @@
+.text-inside-grid {
+    position: absolute;
+    left: 50px;
+  }
+
+  .container {
+    /* Style */
+    height: 64px;
+    line-height: 64px;
+   
+    color: rgb(19, 7, 7);
+    font-family: Helvetica;
+    padding: 12px;
+    box-sizing: border-box;
+    /* Actual logic */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .container div:last-child {
+    text-align: right;
+  }
+  
+  .container div {
+    flex: 1 1 auto;
+  }

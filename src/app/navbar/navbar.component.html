@@ -1,0 +1,13 @@
+<mat-toolbar color="primary" class="mat-elevation-z6">
+    <span>Xomic</span>
+    <div class="spacer"></div>
+    <a mat-button *ngIf="!authService.isLogin" routerLink="home">Home</a>
+    <a mat-button *ngIf="!authService.isLogin" routerLink="about-us">About us</a>
+    <a mat-raised-button color="accent" *ngIf="!authService.isLogin" routerLink="login">Sign Up</a>
+    <a mat-button *ngIf="authService.isLogin" routerLink="/users/create-user">Create User</a>
+    <button mat-raised-button color="primary" *ngIf="authService.isLogin"  color="warn" style="margin-right:5px;" type="button" routerLink="logout">Logout</button>
+
+  </mat-toolbar>
+  <div *ngIf="loaderService.isLoading | async" class="page-overlay-wrapper">
+    <mat-spinner class="bee-spinner"></mat-spinner>
+  </div>

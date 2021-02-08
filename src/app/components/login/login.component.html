@@ -1,0 +1,60 @@
+<div class="login-form-flex">
+    
+    <mat-card style="text-align: center;">
+        
+        <mat-card-title>
+            Login
+        </mat-card-title>
+
+        <div *ngIf="!isAuth" class="alert-danger">
+            <span>Username or password is incorrect.</span>
+            <a class="close" >&times;</a>
+        </div>
+        
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <!-- <mat-grid-list cols="1" rowHeight="60px">
+            <mat-grid-tile> -->
+            <mat-card-content>
+                <mat-form-field class="example-full-width">
+                    <input type="email" formControlName="emailid" matInput placeholder="Enter Email Id">
+                    <mat-error>
+                        <span
+                            *ngIf="!loginFormControl.emailid.valid && loginFormControl.emailid.errors && loginFormControl.emailid.touched"
+                            class="invalid-feedback">
+                            <span *ngIf="loginFormControl.emailid.errors.required">Email is required.</span>
+                            <span *ngIf="loginFormControl.emailid.errors.email">Enter valid email id.</span>
+                        </span>
+                    </mat-error>
+                </mat-form-field>
+                <!-- </mat-grid-tile>
+            <mat-grid-tile> -->
+                <br>
+                <mat-form-field class="example-full-width">
+                    <mat-label>Enter your password</mat-label>
+                    <input matInput formControlName="password" [type]="hide ? 'password' : 'text'">
+                    <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                        [attr.aria-pressed]="hide">
+                        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <mat-error>
+                        <div *ngIf="!loginFormControl.password.valid && loginFormControl.password.errors && loginFormControl.password.touched"
+                            class="invalid-feedback">
+                            <div *ngIf="loginFormControl.password.errors.required">Password is required.</div>
+                            <div *ngIf="loginFormControl.password.errors.minlength">Password must be at least 6
+                                characters.
+                            </div>
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+                <!-- </mat-grid-tile>
+        </mat-grid-list> -->
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-raised-button color="primary" style="margin-right:5px;">Submit</button>
+                <!-- <button mat-raised-button color="primary" style="margin-right:5px;" type="button"
+                    (click)="logout()">Logout</button> -->
+            </mat-card-actions>
+        </form>
+
+    </mat-card>
+</div>

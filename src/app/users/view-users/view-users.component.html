@@ -1,0 +1,89 @@
+<mat-card>
+    
+        <div class="container">
+        <div> <h2 ><b> View User</b></h2></div>
+        <div> <a mat-raised-button color="accent" [routerLink]="['/users/search-user']" >Go Back</a></div>
+      </div>
+   
+    <mat-card-content>
+        <mat-grid-list cols="2" rowHeight="50px">
+            <mat-grid-tile>
+                <span  class="text-inside-grid" ><b> Email ID :</b> {{userDetail.emailid}}</span>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <span  class="text-inside-grid" > <b>User Type :</b>
+                    <span *ngFor="let userTypeDtl of userTypes; let i=index">
+                        <span *ngIf="userTypeDtl.userTypeId==userDetail.usertype">
+                            {{userTypeDtl.userType}}
+                        </span>
+                    </span>
+                </span>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <span  class="text-inside-grid" > <b>Company Type :</b>
+                    <span *ngFor="let companyTypeDtl of companyTypes; let i=index">
+                        <span *ngIf="companyTypeDtl.companyTypeID==userDetail.companytype">
+                            {{companyTypeDtl.companyType}}
+
+                        </span>
+                    </span>
+                </span>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <span  class="text-inside-grid" > <b>Company Name :</b> {{userDetail.companyname}}</span>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <span  class="text-inside-grid" > <b>Address : </b>{{userDetail.address}}</span>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <span  class="text-inside-grid" > <b>Country :</b>
+                    <span *ngFor="let countryDtl of countries; let i=index">
+                        <span *ngIf="countryDtl.countryId==userDetail.country">
+                            {{countryDtl.countryName}}
+                        </span>
+                    </span>
+                </span>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <span  class="text-inside-grid" > <b>State :</b>
+                    <span *ngFor="let state of states; let i=index">
+                        <span *ngIf="state.stateId==userDetail.state">
+                            {{state.stateName}}
+                        </span>
+                    </span>
+                </span>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <span class="text-inside-grid" > <b>Mobile Number :</b> {{userDetail.mobileno}}</span>
+            </mat-grid-tile>
+        </mat-grid-list>
+
+        <mat-card>
+            <mat-card-header>
+                <h2><b> Past Experience</b></h2>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-grid-list cols="6" rowHeight="70px">
+                    <mat-grid-tile><span><b>Client Name</b></span></mat-grid-tile>
+                    <mat-grid-tile><span><b>Project Name</b></span></mat-grid-tile>
+                    <mat-grid-tile><span><b>Project Value</b></span></mat-grid-tile>
+                    <mat-grid-tile><span><b>Project Value In Words</b></span></mat-grid-tile>
+                    <mat-grid-tile><span><b>Project Start Date</b></span></mat-grid-tile>
+                    <mat-grid-tile><span><b>Project End Date</b></span></mat-grid-tile>
+                    <span *ngFor="let pastExp of userDetail.pastExp;let j=index">
+                        <mat-grid-tile><span>{{pastExp.clientName}}</span></mat-grid-tile>
+                        <mat-grid-tile><span>{{pastExp.projectName}}</span></mat-grid-tile>
+                        <mat-grid-tile><span>{{pastExp.projectValue | currencyINR}}</span></mat-grid-tile>
+                        <mat-grid-tile><span>{{pastExp.projectValue | currencyINRInWord}}</span></mat-grid-tile>
+                        <mat-grid-tile><span>{{pastExp.projectStartDate | date: "dd/MMM/yyyy hh:mm:ss"}}</span>
+                        </mat-grid-tile>
+                        <mat-grid-tile><span>{{pastExp.projectEndDate | date: "dd:MMM:yyyy hh:mm:ss"}}</span>
+                            
+                        </mat-grid-tile>
+                        <mat-divider></mat-divider>
+                    </span>
+                </mat-grid-list>
+            </mat-card-content>
+        </mat-card>
+    </mat-card-content>
+</mat-card>

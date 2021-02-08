@@ -1,0 +1,11 @@
+.alert-danger {
+    background-color: #f44336; /* Red */
+}
+
+
+.login-form-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }

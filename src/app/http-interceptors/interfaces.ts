@@ -1,0 +1,1 @@
+export abstract class XSRFStrategy { abstract configureRequest(req: Request): void; }

@@ -1,0 +1,263 @@
+
+<mat-card>
+    <mat-card>
+        <mat-card-title class="card-container-left">
+            Search Users
+        </mat-card-title>
+
+
+        <form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+            <mat-grid-list cols="2" rowHeight="60px">
+                <mat-grid-tile>
+                    <mat-form-field class="example-full-width">
+                        <mat-select formControlName="usertype">
+                            <mat-option>-- None --</mat-option>
+                            <div *ngFor="let userTypeDtl of userTypes; let i=index">
+                                <mat-option [value]="userTypeDtl.userTypeId">{{userTypeDtl.userType}}</mat-option>
+                            </div>
+                        </mat-select>
+                        <mat-label>
+                            Select User Type
+                        </mat-label>
+                        <mat-error>
+                            <span
+                                *ngIf="!searchFormControl.usertype.valid && searchFormControl.usertype.errors && searchFormControl.usertype.touched"
+                                class="invalid-feedback">
+                                <span *ngIf="searchFormControl.usertype.errors.required">User Type is required</span>
+                            </span>
+                        </mat-error>
+                    </mat-form-field>
+                </mat-grid-tile>
+
+                <mat-grid-tile>
+                    <mat-form-field class="example-full-width">
+                        <input type="email" formControlName="emailid" matInput placeholder="Enter Email Id">
+                        <mat-error>
+                            <span
+                                *ngIf="!searchFormControl.emailid.valid && searchFormControl.emailid.errors && searchFormControl.emailid.touched"
+                                class="invalid-feedback">
+                                <span *ngIf="searchFormControl.emailid.errors.required">Email is required.</span>
+                                <span *ngIf="searchFormControl.emailid.errors.email">Enter valid email id.</span>
+                            </span>
+                        </mat-error>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Select your country</mat-label>
+                        <mat-select formControlName="country">
+                            <mat-option>None</mat-option>
+                            <div *ngFor="let countryDtl of countries; let i=index">
+                                <mat-option [value]="countryDtl.countryId">{{countryDtl.countryName}}</mat-option>
+                            </div>
+                        </mat-select>
+                        <mat-error>
+                            <div *ngIf="!searchFormControl.country.valid && searchFormControl.country.errors && searchFormControl.country.touched"
+                                class="invalid-feedback">
+                                <div *ngIf="searchFormControl.country.errors.required">Country is required.</div>
+                            </div>
+                        </mat-error>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-form-field apperance="fill" class="example-full-width">
+                        <input matInput [ngxMatDatetimePicker]="picker2" [max]="today"
+                            placeholder="Choose a date & time" formControlName="projectStartDate">
+
+                        <mat-datepicker-toggle matSuffix [for]="$any(picker2)"></mat-datepicker-toggle>
+
+                        <ngx-mat-datetime-picker #picker2></ngx-mat-datetime-picker>
+                        <mat-error>
+                            <span
+                                *ngIf="!searchFormControl.projectStartDate.valid && searchFormControl.projectStartDate.errors && searchFormControl.projectStartDate.touched"
+                                class="invalid-feedback">
+                                <span *ngIf="searchFormControl.projectStartDate.errors.required">Project
+                                    Start Date is required.</span>
+                            </span>
+                        </mat-error>
+                    </mat-form-field>
+
+                </mat-grid-tile>
+            </mat-grid-list>
+            <mat-card-actions>
+                <button mat-raised-button color="primary" [disabled]="!searchForm.valid">Submit</button>
+            </mat-card-actions>
+        </form>
+    </mat-card>
+    <div class="spacer"></div>
+    <button type="button" mat-raised-button color="primary" (click)="downloadExcel()">Excel</button>
+    <button type="button" mat-raised-button color="primary" (click)="downloadPDF()">PDF</button>
+    <mat-card>
+        <mat-tab-group (selectedTabChange)="onLinkClick($event)">
+            <mat-tab label="All">
+                <ng-template matTabContent>
+
+                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                        <ng-container matColumnDef="Sr.no.">
+                            <th mat-header-cell *matHeaderCellDef>Sr. No.</th>
+                            <td mat-cell *matCellDef="let element; let i = index;">{{i+1}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="User Type">
+                            <th mat-header-cell *matHeaderCellDef>User Type</th>
+                            <td mat-cell *matCellDef="let element">{{element._usertype}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Email ID">
+                            <th mat-header-cell *matHeaderCellDef>Email ID</th>
+                            <td mat-cell *matCellDef="let element">{{element._emailid}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Company Type">
+                            <th mat-header-cell *matHeaderCellDef>Company Type</th>
+                            <td mat-cell *matCellDef="let element">{{element._companytype}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Company Name">
+                            <th mat-header-cell *matHeaderCellDef>Company Name</th>
+                            <td mat-cell *matCellDef="let element">{{element._companyname}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Mobile No.">
+                            <th mat-header-cell *matHeaderCellDef>Mobile No.</th>
+                            <td mat-cell *matCellDef="let element">{{element._mobileno}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Action">
+                            <th mat-header-cell *matHeaderCellDef> Action </th>
+                            <td mat-cell *matCellDef="let element"> <a [routerLink]="['/users/edit-user/',1]"
+                                    matTooltip="Edit">
+                                    <span class="material-icons">
+                                        create
+                                    </span></a> 
+                                    <a (click)="onView(1)" matTooltip="View">
+                                        <span class="material-icons">
+                                            assignment
+                                        </span>
+                                    </a>
+                                <a matTooltip="Delete" (click)="openDialog()"><span class="material-icons">
+                                        delete_outline
+                                    </span></a>
+                                <!-- <button mat-raised-button (click)="openDialog()">Delete</button> -->
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+
+                    <mat-paginator [length]="ks" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+                        (page)="pageEvent=getNextData($event)" [pageIndex]="pagIndexForPaginator" showFirstLastButtons></mat-paginator>
+
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="Accepted">
+                <ng-template matTabContent>
+
+                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                        <ng-container matColumnDef="Sr.no.">
+                            <th mat-header-cell *matHeaderCellDef>Sr. No.</th>
+                            <td mat-cell *matCellDef="let element; let i = index;">{{i+1}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="User Type">
+                            <th mat-header-cell *matHeaderCellDef>User Type</th>
+                            <td mat-cell *matCellDef="let element">{{element._usertype}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Email ID">
+                            <th mat-header-cell *matHeaderCellDef>Email ID</th>
+                            <td mat-cell *matCellDef="let element">{{element._emailid}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Company Type">
+                            <th mat-header-cell *matHeaderCellDef>Company Type</th>
+                            <td mat-cell *matCellDef="let element">{{element._companytype}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Company Name">
+                            <th mat-header-cell *matHeaderCellDef>Company Name</th>
+                            <td mat-cell *matCellDef="let element">{{element._companyname}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Mobile No.">
+                            <th mat-header-cell *matHeaderCellDef>Mobile No.</th>
+                            <td mat-cell *matCellDef="let element">{{element._mobileno}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Action">
+                            <th mat-header-cell *matHeaderCellDef> Action </th>
+                            <td mat-cell *matCellDef="let element">
+                                 <a [routerLink]="['/users/edit-user/',1]" matTooltip="Edit">
+                                    <span class="material-icons">
+                                        create
+                                    </span>
+                                </a>
+                                <a (click)="onView(1)" matTooltip="View">
+                                    <span class="material-icons">
+                                        assignment
+                                    </span>
+                                </a>
+                                <a matTooltip="Delete" (click)="openDialog()">
+                                    <span class="material-icons">
+                                        delete_outline
+                                    </span>
+                                </a>
+                                <!-- <button mat-raised-button (click)="openDialog()">Delete</button> -->
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+
+                    <mat-paginator [length]="ks" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+                        (page)="pageEvent=getNextData($event)" [pageIndex]="pagIndexForPaginator" showFirstLastButtons></mat-paginator>
+
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="Rejected">
+                <ng-template matTabContent>
+
+                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                        <ng-container matColumnDef="Sr.no.">
+                            <th mat-header-cell *matHeaderCellDef>Sr. No.</th>
+                            <td mat-cell *matCellDef="let element; let i = index;">{{i+1}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="User Type">
+                            <th mat-header-cell *matHeaderCellDef>User Type</th>
+                            <td mat-cell *matCellDef="let element">{{element._usertype}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Email ID">
+                            <th mat-header-cell *matHeaderCellDef>Email ID</th>
+                            <td mat-cell *matCellDef="let element">{{element._emailid}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Company Type">
+                            <th mat-header-cell *matHeaderCellDef>Company Type</th>
+                            <td mat-cell *matCellDef="let element">{{element._companytype}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Company Name">
+                            <th mat-header-cell *matHeaderCellDef>Company Name</th>
+                            <td mat-cell *matCellDef="let element">{{element._companyname}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Mobile No.">
+                            <th mat-header-cell *matHeaderCellDef>Mobile No.</th>
+                            <td mat-cell *matCellDef="let element">{{element._mobileno}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Action">
+                            <th mat-header-cell *matHeaderCellDef> Action </th>
+                            <td mat-cell *matCellDef="let element">
+                                <a [routerLink]="['/users/edit-user/',1]" matTooltip="Edit">
+                                    <span class="material-icons">
+                                        create
+                                    </span>
+                                </a>
+                                <a (click)="onView(1)" matTooltip="View">
+                                    <span class="material-icons">
+                                        assignment
+                                    </span>
+                                </a>
+                                <a (click)="openDialog()" matTooltip="Delete"><span class="material-icons">
+                                        delete_outline
+                                    </span></a>
+                                <!-- <button mat-raised-button (click)="openDialog()">Delete</button> -->
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+
+                    <mat-paginator [length]="ks" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+                        (page)="pageEvent=getNextData($event)" [pageIndex]="pagIndexForPaginator" showFirstLastButtons></mat-paginator>
+
+                </ng-template>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-card>
+</mat-card>
