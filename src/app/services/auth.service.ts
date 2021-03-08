@@ -7,11 +7,14 @@ import { CookieService } from 'ngx-cookie-service';
 export class AuthService {
 
   isLogin=false;
+  
   constructor(private cookieService:CookieService) { }
 
   isAuth(){
     this.isLogin=!!this.cookieService.get('authToken');
     return this.isLogin;
   }
+
+  
   
 }

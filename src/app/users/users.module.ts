@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { UsersRoutingModule } from './users-routing.module';
 import { DialogContentExampleDialog, UsersComponent } from './users.component';
 import { ViewUsersComponent } from './view-users/view-users.component';
-import { DialogOverviewExampleDialog, SearchUsersComponent } from './search-users/search-users.component';
+import { DeleteDialog, SearchUsersComponent } from './search-users/search-users.component';
 import {MatSelectModule} from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -17,7 +17,7 @@ import { ThemeComponent } from './theme/theme.component';
 import { AuthInterceptor } from '../http-interceptors/AuthInterceptors';
 import { MaterialModule } from '../material.module';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-
+import { DataTablesModule } from 'angular-datatables';
 
 @NgModule({
   declarations: [
@@ -25,7 +25,7 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     ViewUsersComponent,
     SearchUsersComponent,
     ThemeComponent,
-    DialogOverviewExampleDialog,
+    DeleteDialog,
     DialogContentExampleDialog],
   imports: [
     CommonModule,
@@ -34,6 +34,7 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     ReactiveFormsModule,
     MatSelectModule,
     HttpClientModule,
+    DataTablesModule,
     HttpClientXsrfModule.withOptions({
       cookieName: 'My-Xsrf-Cookie',
       headerName: 'My-Xsrf-Header',

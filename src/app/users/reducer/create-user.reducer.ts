@@ -1,17 +1,23 @@
-import { success } from './../models/success';
-import { user } from './../models/user';
+
 import { Action, createReducer, on } from '@ngrx/store';
 import * as CreateUserActions from '../actions/create-user.actions';
 
 export const createUserFeatureKey = 'createUserState';
 
+interface  user{
+  statusCode:number,
+  rowno:number
+}
 export interface State {
-  user:Object;
+  user:user;
   error:String;
 }
 
 export const initialState: State = {
-  user:'',
+  user:{
+    statusCode:0,
+    rowno:0
+  },
   error:''
 };
 

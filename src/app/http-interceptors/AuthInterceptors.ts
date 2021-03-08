@@ -63,7 +63,9 @@ export class AuthInterceptor implements HttpInterceptor {
             this.authService.isLogin=false;
             this.cookieService.delete('authToken','/');
             this.cookieService.delete('XSRF-TOKEN','/');
-            
+            localStorage.removeItem('search-user-page-tab-index');
+            localStorage.removeItem('search-user-page-index');
+
             this.router.navigate(['unauthorized-access']);
           } else {
             this.router.navigate(['server-error']);
@@ -84,7 +86,9 @@ export class AuthInterceptor implements HttpInterceptor {
           this.authService.isLogin=false;
           this.cookieService.delete('authToken','/');
           this.cookieService.delete('XSRF-TOKEN','/');
-
+          localStorage.removeItem('search-user-page-tab-index');
+          localStorage.removeItem('search-user-page-index');
+          
           this.router.navigate(['unauthorized-access']);
         } else {
           this.router.navigate(['server-error']);

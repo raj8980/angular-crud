@@ -1,0 +1,9 @@
+<h1 mat-dialog-title>{{data.isActive==0 ? 'Activate' : 'Deactivate' }} User</h1>
+<div mat-dialog-content>
+  <p>Are you sure to {{data.isActive==0 ? 'Activate' : 'Deactivate' }} user?</p>
+  
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button (click)="onYesClick(data.userid)" cdkFocusInitial>Ok</button>
+</div>

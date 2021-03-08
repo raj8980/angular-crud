@@ -15,8 +15,8 @@ export interface SearchUsers{
     _length:number;
     _pageSize:number;
     _pageIndex:string;
-    
-
+    _userid:Number;
+    _isActive:Number;
     // public get userS(){
     //     return this.users;
     // }

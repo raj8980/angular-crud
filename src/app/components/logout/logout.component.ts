@@ -29,6 +29,7 @@ export class LogoutComponent implements OnInit{
     this.router.routerState.snapshot.url='';
     this.authService.isLogin=false;
     localStorage.removeItem('search-user-page-index');
+    localStorage.removeItem('search-user-page-tab-index');
   }
   
   

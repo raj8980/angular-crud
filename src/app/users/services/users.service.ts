@@ -1,6 +1,4 @@
-
-
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { catchError, map, tap } from 'rxjs/operators'
@@ -34,15 +32,17 @@ export class UsersService {
   
  
   getPageWiseData(pageData:PageData) {
+    
     return this.http.post<SearchUsers[]>(environment.apiurl+"/ajax-search-users",pageData);
   }
 
 
   saveUserDetails(users: Object) {
-    return this.http.post(environment.apiurl+"/save-usesr-detail", users).pipe(
-      tap(data => console.log('All: ' + JSON.stringify(data))),
-      catchError(this.handleError)
-    );
+    interface userSave{
+      status:number,
+      userID:number
+    }
+    return this.http.post<userSave>(environment.apiurl+"/save-user-detail", users);
     
   }
   
@@ -64,7 +64,7 @@ export class UsersService {
   }
 
   duplicateCheckEmail(emailId:String){
-    return this.http.post<success>(environment.apiurl+"/duplicate-check-email",emailId);
+    return this.http.post<String>(environment.apiurl+"/duplicate-check-email",emailId);
   }
 
   // saveDocumentDetails(value:FormData){
@@ -83,12 +83,21 @@ export class UsersService {
 
 
   public upload(formData:any) {
+    
     return this.http.post<FormData>(environment.apiurl+"/upload-file", formData, {  
         reportProgress: true,  
         observe: 'events'  
       });  
   }
 
+
+  deactivateUser(userID:Number){
+    return this.http.post<success>(environment.apiurl+"/deactive-status",userID);
+  }
+
+  activateUser(userID:Number){
+    return this.http.post<success>(environment.apiurl+"/active-status",userID);
+  }
 
   private handleError(err: HttpErrorResponse) {
     // in a real world app, we may send the server to some remote logging infrastructure

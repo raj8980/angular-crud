@@ -182,20 +182,27 @@ export class UsersComponent implements OnInit, OnDestroy {
   onSubmit() {
 
     this.isdisabled=true;
-
-    this.store.dispatch(loadCreateUsers({ form: this.profileForm.value }));
-    var subscription1 = this.store.pipe(select(fromUser.getUser, { form: this.profileForm.value })).subscribe();
+    let userID:number=0;
+    // this.store.dispatch(loadCreateUsers({ form: this.profileForm.value }));
+    var subscription1 = this.userService.saveUserDetails(this.profileForm.value).subscribe(user=>{
+     
+      if(user.status==200){
+     
+        userID=user.userID;
+     
+        let uploaded=this.uploadFiles(userID);
+        if(uploaded){
+          this.router.navigate(['/users/search-user',this.id?2:1]);
+        }else{
+          this.isRegisterError=true;
+          this.isdisabled=false;
+        }
+      }
+    });
     
     this.subscription.add(subscription1);
     
-    let uploaded=this.uploadFiles();
-    
-    if(uploaded){
-      this.router.navigate(['/users/search-user',this.id?2:1]);
-    }else{
-      this.isRegisterError=true;
-      this.isdisabled=false;
-    }
+   
   }
 
   //loadState based on country changes
@@ -276,11 +283,12 @@ export class UsersComponent implements OnInit, OnDestroy {
     fileUpload.click();
   }
 
-  private uploadFiles() {
+  private uploadFiles(userID:number) {
+    console.log("userID:"+userID);
     this.uploadDocument.nativeElement.value = '';
     let count=0;
     this.files.forEach(file => {
-      let value=this.uploadFile(file);
+      let value=this.uploadFile(file,userID);
       
       if(!value){
         count++;
@@ -291,9 +299,11 @@ export class UsersComponent implements OnInit, OnDestroy {
     return false;
   }
   
-  uploadFile(file: any) {
+  uploadFile(file: any,userID:number) {
     const formData = new FormData();
     formData.append('file', file.data);
+    console.log("userID:"+userID);
+    formData.append('userID',userID.toString());
     formData.append('fileType', file.filetype);
     file.inProgress = true;
     var subscription3 = this.userService.upload(formData).subscribe(
@@ -323,7 +333,9 @@ export class UsersComponent implements OnInit, OnDestroy {
     const emailid=this.profileForm.get('emailid')?.value;
     
    var subscription4= this.userService.duplicateCheckEmail(emailid).subscribe(success=>{
-      if(success.authToken=='true'){
+     
+      if(success.toString()==="ALREADY_REPORTED"){
+        
         this.profileForm.controls['emailid'].setErrors({"emailAlreadyExist":true});
       }
     });

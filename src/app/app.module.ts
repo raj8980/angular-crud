@@ -27,6 +27,8 @@ import { AuthService } from './services/auth.service';
 import { ServerErrorComponent } from './components/server-error/server-error.component';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { EncdecService } from './services/encdec.service';
+import { DataTablesModule } from 'angular-datatables';
 
 @NgModule({
   declarations: [
@@ -47,6 +49,7 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     StoreModule.forRoot(reducers,{metaReducers}),
     EffectsModule.forRoot([CreateUserEffects, SearchUserEffects, SearchUserEffects]),
     HttpClientModule,
+    DataTablesModule,
     HttpClientXsrfModule.withOptions({
       cookieName: 'XSRF-TOKEN',
       headerName: 'X-XSRF-TOKEN',
@@ -63,9 +66,9 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     useClass:AuthInterceptor,
     multi:true
   },
-
   HttpService,
-  AuthService
+  AuthService,
+  EncdecService
 ],
   bootstrap: [AppComponent]
 })
